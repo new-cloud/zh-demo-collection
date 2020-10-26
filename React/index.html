@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src='./js/react.js'></script>
+    <script src='./js/react-dom.js'></script>
+    <script src='./js/browser.min.js'></script>
+    <!-- 报错? <script type="text/babel" src='./component.js'></script> -->
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script type="text/babel">
+    class Welcome extends React.Component {
+      render() {
+        return <h1>{this.props.name}Hello 子组件</h1>;
+      }
+    }
+    function Muin(props) {
+        return <div>
+            <h2>组件2{props.name}</h2>
+            <div>
+                {
+                    props.obj.isNot && '是true就显示吧'
+                }    
+            </div>
+            <Welcome name={new Date().toLocaleTimeString()}/>
+            {
+                props.list.map( (value,index) => <MuinItem key={ index } value={ value }/> )
+            }
+        </div>
+    }
+    function MuinItem(props){
+        return <h5>{props.value}</h5>;
+    }
+    function ActionLink() {
+        function handleClick(e) {
+            // console.log(e);
+            // e.preventDefault();  e可以用来阻止默认行为,这里是阻止链接打开一个新页面
+            console.log('The link was clicked.');
+        }
+      
+        return (
+            <a href="#" onClick={handleClick}>
+              Click me
+            </a>
+        );
+    }
+    class App extends React.Component {
+        constructor(props){
+            super(props);
+            this.state = {
+                value: '',
+                textarea: '',
+                option: '',
+                name: '东东'
+            };
+            this.handleChange = this.handleChange.bind(this);
+            this.textareaHandleChange = this.textareaHandleChange.bind(this);
+            this.optionHandleChange = this.optionHandleChange.bind(this);
+            this.handleSubmit = this.handleSubmit.bind(this);
+        }
+        handleChange(event) {
+            this.setState({value: event.target.value});
+        }
+        textareaHandleChange(event) {
+            this.setState({textarea: event.target.value});
+        }
+        optionHandleChange(event) {
+            this.setState({option: event.target.value});
+        }
+
+        handleSubmit(event) {
+            console.log('提交的名字: ' + this.state.value);
+            console.log('文本域: ' + this.state.textarea);
+            console.log('下拉选择: ' + this.state.option);
+            event.preventDefault();
+        }
+        render(){
+            return <div>
+                <p>this is react</p>
+                <hr />
+                <Welcome name="ss"/>
+                <hr />
+                <Muin name="22" obj={ {a:'东东',isNot: false} } list={ [12,13,14] }/>
+                <hr />
+                <h1>{this.state.name}</h1>
+                <hr />
+                <ActionLink />
+                <hr />
+                <form onSubmit={this.handleSubmit}>
+                    名字:
+                    <input type="text" value={this.state.value} onChange={this.handleChange} />
+                  <br />
+                    文本域:
+                    <textarea value={this.state.textarea} onChange={this.textareaHandleChange} />
+                  <br />
+                  <select value={this.state.option} onChange={this.optionHandleChange}>
+                    <option value="grapefruit">葡萄柚</option>
+                    <option value="lime">酸橙</option>
+                    <option value="coconut">椰子</option>
+                    <option value="mango">芒果</option>
+                  </select>
+                  <br />
+                  <input type="submit" value="提交" />
+                </form>
+                <h1>{ this.state.value }</h1>
+            </div>
+        };
+        componentDidMount() {
+          setTimeout(() => {
+            this.setState({
+              name: '默默'
+            });
+          }, 2000);
+        };
+        componentWillUnmount() {
+        };
+    };
+    ReactDOM.render(
+        <App />,
+        document.getElementById('app')
+    )
+    // setInterval(() => {
+    //     ReactDOM.render(
+    //         <App />,
+    //         document.getElementById('app')
+    //     )
+    // }, 1000);
+</script>
+<script>
+
+</script>
+</html>

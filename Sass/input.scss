@@ -1,0 +1,65 @@
+$primary-color: #333;
+
+body {
+  font: 100%;
+  color: $primary-color;
+  text-align: center;
+  &:hover{
+    color: red;
+  }
+}
+// 混合器
+@mixin woshiname($w){
+  color: #333;
+  width: $w;
+}
+.div1{
+  @include woshiname(100px);
+}
+//继承
+.c1{
+  border: 1px solid #ffff00;
+  border-radius: 50%;
+}
+.c2{
+  @extend .c1;
+  width:100px;height:100px;
+}
+//运算
+$w1: 100px;
+$w2: $w1*2;
+$w3: $w1+$w2;
+.div2{
+  width: $w3;
+}
+//插值语句
+.div3:after{
+  content:"I ate #{100+3} baozis";
+  background:rgba(01,02,03,0.3);
+}
+
+//函数
+// round($value) 四舍五入   例：width:round(4.5px);  //width:5px;
+// 			ceil($v) 向上取整
+// floor($v) 向下取整
+// min($v1,$v2,$v3......) 找出几个值中的最小值
+// max($v1,$v2,$v3.....) 找出几个值中的最大值
+// random() 随机数
+//例子1 :  生成随机背景颜色
+.div4{
+  background: rgb(random(235),random(235),random(235));
+}
+
+@for $i from 0 through 3 {
+  .item-#{$i} { width: 2em * $i; }
+}
+.div00{
+  .div11{
+    color: red;
+    @for $i from 1 through 2{
+      & .div22{
+        color: #ffff00;
+      }
+    }
+  }
+}
