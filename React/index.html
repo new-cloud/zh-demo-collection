@@ -25,7 +25,7 @@
             <div>
                 {
                     props.obj.isNot && '是true就显示吧'
-                }    
+                }
             </div>
             <Welcome name={new Date().toLocaleTimeString()}/>
             {
@@ -42,72 +42,130 @@
             // e.preventDefault();  e可以用来阻止默认行为,这里是阻止链接打开一个新页面
             console.log('The link was clicked.');
         }
+        return <a href="#" onClick={handleClick}>
+            Click me
+        </a>
+    }
+    const scaleNames = {
+      c: '摄氏度',
+      f: '华氏度'
+    }
+    function toCelsius(fahrenheit) {
+      return (fahrenheit - 32) * 5 / 9;
+    }
+
+    function toFahrenheit(celsius) {
+      return (celsius * 9 / 5) + 32;
+    }
+    function tryConvert(temperature, convert) {
+      const input = parseFloat(temperature);
+      if (Number.isNaN(input)) {
+        return '';
+      }
+      const output = convert(input);
+      const rounded = Math.round(output * 1000) / 1000;
+      return rounded.toString();
+    }
+    class TemperatureInput extends React.Component {
+        constructor(props) {
+          super(props);
+          this.handleChange = this.handleChange.bind(this);
+        }
       
-        return (
-            <a href="#" onClick={handleClick}>
-              Click me
-            </a>
-        );
+        handleChange(e) {
+          this.props.onTemperatureChange(this.props.scale, e.target.value);
+        }
+      
+        render() {
+          const temperature = this.props.temperature;
+          const scale = this.props.scale;
+          return (
+            <fieldset>
+              <legend>{scaleNames[scale]}是:</legend>
+              <input value={temperature}
+                     onChange={this.handleChange} />
+            </fieldset>
+          );
+        }
     }
     class App extends React.Component {
         constructor(props){
             super(props);
             this.state = {
-                value: '',
+                input: '',
                 textarea: '',
                 option: '',
-                name: '东东'
+                name: '东东',
+                temperature: '',
+                scale: 'c'
             };
             this.handleChange = this.handleChange.bind(this);
-            this.textareaHandleChange = this.textareaHandleChange.bind(this);
-            this.optionHandleChange = this.optionHandleChange.bind(this);
             this.handleSubmit = this.handleSubmit.bind(this);
+            this.temperatureChange = this.temperatureChange.bind(this);
         }
         handleChange(event) {
-            this.setState({value: event.target.value});
+            console.log(event.target.name)
+            const target = event.target;
+            const value = target.type === 'checkbox' ? target.checked : target.value;
+            const name = target.name;
+            this.setState({
+              [name]: value
+            });
         }
-        textareaHandleChange(event) {
-            this.setState({textarea: event.target.value});
+        temperatureChange(scale,temperature){
+            this.setState({scale, temperature});
         }
-        optionHandleChange(event) {
-            this.setState({option: event.target.value});
-        }
-
         handleSubmit(event) {
-            console.log('提交的名字: ' + this.state.value);
+            console.log('提交的名字: ' + this.state.input);
             console.log('文本域: ' + this.state.textarea);
             console.log('下拉选择: ' + this.state.option);
             event.preventDefault();
         }
         render(){
+            const scale = this.state.scale;
+            const temperature = this.state.temperature;
+            const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+            const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
             return <div>
                 <p>this is react</p>
                 <hr />
                 <Welcome name="ss"/>
                 <hr />
+                <ActionLink />
+                <hr />
                 <Muin name="22" obj={ {a:'东东',isNot: false} } list={ [12,13,14] }/>
                 <hr />
                 <h1>{this.state.name}</h1>
                 <hr />
-                <ActionLink />
-                <hr />
                 <form onSubmit={this.handleSubmit}>
-                    名字:
-                    <input type="text" value={this.state.value} onChange={this.handleChange} />
-                  <br />
-                    文本域:
-                    <textarea value={this.state.textarea} onChange={this.textareaHandleChange} />
-                  <br />
-                  <select value={this.state.option} onChange={this.optionHandleChange}>
-                    <option value="grapefruit">葡萄柚</option>
-                    <option value="lime">酸橙</option>
-                    <option value="coconut">椰子</option>
-                    <option value="mango">芒果</option>
-                  </select>
-                  <br />
-                  <input type="submit" value="提交" />
+                      名字:
+                      <input type="text" value={this.state.input} name="input" onChange={this.handleChange} />
+                    <br />
+                      文本域:
+                      <textarea value={this.state.textarea} name="textarea" onChange={this.handleChange} />
+                    <br />
+                    <select value={this.state.option} name="option" onChange={this.handleChange}>
+                      <option value="grapefruit">葡萄柚</option>
+                      <option value="lime">酸橙</option>
+                      <option value="coconut">椰子</option>
+                      <option value="mango">芒果</option>
+                    </select>
+                    <br />
+                    <input type="submit" value="提交" />
                 </form>
-                <h1>{ this.state.value }</h1>
+                <h1>{ this.state.input }</h1>
+                <br />
+                <h1>组件通信: 子传父</h1>
+                <TemperatureInput
+                  scale="c"
+                  temperature={celsius}
+                  onTemperatureChange={this.temperatureChange} />
+                <TemperatureInput
+                  scale="f"
+                  temperature={fahrenheit}
+                  onTemperatureChange={this.temperatureChange} />
+                <h1>组合 && 继承    </h1>
+                  
             </div>
         };
         componentDidMount() {
