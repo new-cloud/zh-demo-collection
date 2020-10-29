@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src='./js/react.js'></script>
+    <script src='./js/react-dom.js'></script>
+    <script src='./js/browser.min.js'></script>
+    <title>React高级指引</title>
+</head>
+<body>
+    <div id="app"></div>
+   
+</body>
+<script type="text/babel">
+let Fragment = React.Fragment;
+function ListItem({ item }) {
+  return (
+    <Fragment>
+        <dt>{item.term}</dt>
+        <dd>{item.description}</dd>
+    </Fragment>
+  );
+}
+function Glossary(props) {
+    let arr = [
+        {term:'xx',description:'mnm',id:21542},
+        {term:'xx',description:'mnm',id:215242},
+        {term:'xx',description:'mnm',id:215412}
+    ];
+  return (
+    <dl>
+      {arr.map(item => (
+        <ListItem item={item} key={item.id} />
+      ))}
+    </dl>
+  );
+}
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    // 创造一个 textInput DOM 元素的 ref
+    this.textInput = React.createRef();
+    this.span = '';
+  }
+  render() {
+  // 使用 `ref` 回调函数以在实例的一个变量中存储文本输入 DOM 元素
+  //（比如，this.textInput）。
+    return (
+        <div>
+            <p>1、用createRef()获取 16.3 新增</p>
+            <input
+              type="text"
+              ref={this.textInput}
+            />
+            <p>2、用回调函数获取  （主流方式）</p>
+            <span ref={ (span) => { this.span = span } }>获取我吧</span>
+            <p>3、直接获取 类似vue</p>
+            <div ref="div1">直接获取我吧</div>
+            {
+                this.props.textP && <p ref={this.props.textP}>我是子组件元素</p>
+            }
+        </div>
+    );
+  }
+  componentDidMount(){
+    // 注意：我们通过访问 “current” 来获得 DOM 节点
+    this.textInput.current.focus();
+    // console.log(this.span);
+    // console.log(this.refs.div1);
+  }
+}
+class Parent extends React.Component {
+    constructor(props) {
+      super(props);
+      // 创造一个 textInput DOM 元素的 ref
+      this.textP = React.createRef();
+    }
+    render() {
+    // 使用 `ref` 回调函数以在实例的一个变量中存储文本输入 DOM 元素
+    //（比如，this.textInput）。
+      return (
+        <div>
+            <p>我是父组件元素</p>
+            <CustomTextInput textP={this.textP}/>
+        </div>
+      );
+    }
+    componentDidMount(){
+        //获取到子组件得DOM 元素
+    //   console.log(this.textP.current);
+    }
+}
+class App extends React.Component {
+    constructor(props){
+        super(props);
+    }
+    fun = ()=>{console.log(1)}
+    render(){
+        return <div>
+            <h1>语义化的 HTML: 相当于VUE 的模板标签</h1>
+            <Glossary />
+            <h1>获取DOM 元素</h1>
+            <CustomTextInput />
+            <h1>父组件获取子组件 DOM 元素</h1>
+            <Parent />
+        </div>
+        
+    }
+}
+ReactDOM.render(
+    <App />,
+    document.getElementById('app')
+)
+</script>
+</html>
