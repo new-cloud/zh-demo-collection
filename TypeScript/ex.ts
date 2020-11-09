@@ -38,6 +38,21 @@ function checkSex(sex: Sex) {
 let member_sex:Sex = Sex.FEMALE;
 // console.log(checkSex(member_sex)) // 女
 
+function add(a:'aa',b?:number):string{
+    console.log(a)
+    return '11';
+}
+// console.log(add('aa'));
+
+//类的定义
+class obj{
+    name:string;
+    constructor(name:string){
+        this.name = 'xx';
+    }
+}
+console.log(new obj('aa'));
+//接口
 interface list {
     id: number,
     name: string
@@ -63,6 +78,6 @@ let res1 = {
     ]
 }
 // console.log(render(res))  //报错
-console.log(render(res1))
+// console.log(render(res1))
 
 export {}
