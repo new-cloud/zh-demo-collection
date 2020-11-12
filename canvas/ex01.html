@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .d1{
+            display: flex;
+            justify-content: center;
+        }
+        canvas{
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="d1">
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+    </div>
+</body>
+<script>
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    // 绘制矩形
+    ctx.fillStyle = "#2789FF";
+    ctx.fillRect(0,0,150,75);
+    // 绘制一条线
+    ctx.moveTo(200,100);        //定义线条开始坐标
+    ctx.lineTo(210,110);    //定义线条结束坐标
+    ctx.stroke();
+    // 绘制文本
+    let text = '....';
+    ctx.fillStyle = '#FF0000';
+    ctx.fillText(text, 150, 150);
+</script>
+</html>
