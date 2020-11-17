@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title>Swiper的切换</title>
 	<link rel="stylesheet" href="swiper-bundle.min.css">
-	<script src="swiper.min.js"></script>
+	<script src="swiper.js"></script>
 	<style>
 		.swiper-container {
 			position: relative;
@@ -20,11 +20,7 @@
 			box-shadow: 0 8px 30px #ddd;
 		}
 
-		.swiper-slide img {
-			display: block;
-		}
-
-		.swiper-slide p {
+		/* .swiper-slide p {
 			line-height: 98px;
 			padding-top: 0;
 			text-align: center;
@@ -33,7 +29,7 @@
 			margin: 0;
 		}
 
-		.swiper-pagination {
+		 .swiper-pagination {
 			width: 100%;
 			bottom: 20px;
 		}
@@ -50,7 +46,7 @@
 		.swiper-pagination-bullets .swiper-pagination-bullet-active {
 			border: 3px solid #00aadc;
 			background-color: #fff;
-		}
+		} */
 
 		/* .swiper-button-prev {
 			left: -30px;
@@ -70,21 +66,12 @@
 			height: 45px;
 			background-position: 0 -93px;
 			background-size: 100%;
-		}*/
+		}
 
 		.swiper-button-next:hover {
 			background-position: 0 -139px;
 			background-size: 100%
-		}
-		.div1{
-			position: absolute;
-			z-index: 100;
-			left: 0;
-			top: 0;
-			width: 300px;
-			height: 408px;
-			background: #636363;
-		}
+		}*/
 	</style>
 </head>
 
@@ -107,12 +94,12 @@
 				<p>Picture information 5</p>
 			</div>
 		</div>
-		<div class="div1"></div>
 		<div class="swiper-button-prev"></div>
 		<div class="swiper-button-next"></div>
 	</div>
 
 	<script>
+		debugger;
 		var certifySwiper = new Swiper('.swiper-container', {
 			watchSlidesProgress: true,
 			slidesPerView: 'auto',
@@ -124,12 +111,13 @@
 				nextEl: '.swiper-button-next',
 				prevEl: '.swiper-button-prev',
 			},
-			pagination: {
-				el: '.swiper-pagination',
-				//clickable :true,
-			},
+			// pagination: {  //分页器
+			// 	el: '.swiper-pagination',
+			// 	clickable :true,
+			// },
 			on: {
 				progress: function (progress) {
+					console.log(1);
 					for (i = 0; i < this.slides.length; i++) {
 						var slide = this.slides.eq(i);
 						var slideProgress = this.slides[i].progress;
