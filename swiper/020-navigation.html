@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<title>Swiper的切换</title>
 	<link rel="stylesheet" href="swiper-bundle.min.css">
-	<script src="swiper.js"></script>
+	<script src="js/swiper.js"></script>
 	<style>
 		.swiper-container {
 			position: relative;
@@ -20,58 +20,6 @@
 			box-shadow: 0 8px 30px #ddd;
 		}
 
-		/* .swiper-slide p {
-			line-height: 98px;
-			padding-top: 0;
-			text-align: center;
-			color: #636363;
-			font-size: 1.1em;
-			margin: 0;
-		}
-
-		 .swiper-pagination {
-			width: 100%;
-			bottom: 20px;
-		}
-
-		.swiper-pagination-bullets .swiper-pagination-bullet {
-			margin: 0 5px;
-			border: 3px solid #fff;
-			background-color: #d5d5d5;
-			width: 10px;
-			height: 10px;
-			opacity: 1;
-		}
-
-		.swiper-pagination-bullets .swiper-pagination-bullet-active {
-			border: 3px solid #00aadc;
-			background-color: #fff;
-		} */
-
-		/* .swiper-button-prev {
-			left: -30px;
-			width: 45px;
-			height: 45px;
-			background-position: 0 0;
-			background-size: 100%;
-		}
-		
-		   .swiper-button-prev:hover {
-			background-position: 0 -46px;
-			background-size: 100%
-		} 
-		.swiper-button-next {
-			right: -30px;
-			width: 45px;
-			height: 45px;
-			background-position: 0 -93px;
-			background-size: 100%;
-		}
-
-		.swiper-button-next:hover {
-			background-position: 0 -139px;
-			background-size: 100%
-		}*/
 	</style>
 </head>
 
@@ -92,6 +40,9 @@
 			</div>
 			<div class="swiper-slide">
 				<p>Picture information 5</p>
+			</div>
+			<div class="swiper-slide">
+				<p>Picture information 6</p>
 			</div>
 		</div>
 		<div class="swiper-button-prev"></div>
@@ -115,18 +66,17 @@
 			// 	clickable :true,
 			// },
 			on: {
-				progress: function (progress) {
-					console.log(1);
-					for (i = 0; i < this.slides.length; i++) {
+				progress: function () {
+					for (let i = 0; i < this.slides.length; i++) {
 						var slide = this.slides.eq(i);
 						var slideProgress = this.slides[i].progress;
-						modify = 1;
+						let modify = 1;
 						if (Math.abs(slideProgress) > 1) {
 							modify = (Math.abs(slideProgress) - 1) * 0.3 + 1;
 						}
-						translate = slideProgress * modify * 260 + 'px';
-						scale = 1 - Math.abs(slideProgress) / 5;
-						zIndex = 999 - Math.abs(Math.round(10 * slideProgress));
+						let translate = slideProgress * modify * 260 + 'px';
+						let scale = 1 - Math.abs(slideProgress) / 5;
+						let zIndex = 999 - Math.abs(Math.round(10 * slideProgress));
 						slide.transform('translateX(' + translate + ') scale(' + scale + ')');
 						slide.css('zIndex', zIndex);
 						slide.css('opacity', 1);
