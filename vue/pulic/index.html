@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"> 
+        
+    </div>
+</body>
+<script src="/dist/umd/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#app",
+        data: {
+            form: {
+                input: 'laji',
+                adada: {
+                    name: '阿布'
+                }
+            },
+            arr: [
+                {name: 'nn'},
+                {name: 'xx'}
+            ],
+            age: 10,
+            sex: '粑粑',
+        },
+        computed: {
+            getNewName() {
+                return '1111' + this.sex + this.age;
+            }
+        },
+        methods: {
+            change(){
+                this.age = 11;
+            }
+        }
+    });
+    vm.$data.arr.push({
+        name: 'mm'
+    });
+    console.log(vm.$data.arr);
+</script>
+</html>
