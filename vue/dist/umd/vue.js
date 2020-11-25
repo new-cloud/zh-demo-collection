@@ -153,16 +153,33 @@
   }
 
   // Regular Expressions for parsing tags and attributes
-  // const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
-  // const dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
-  // const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
-  // const qnameCapture = `((?:${ncname}\\:)?${ncname})`
-  // const startTagOpen = new RegExp(`^<${qnameCapture}`)
-  // const startTagClose = /^\s*(\/?)>/
-  // const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
-  // const doctype = /^<!DOCTYPE [^>]+>/i
+  var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z]*";
+  var qnameCapture = "((?:".concat(ncname, "\\:)?").concat(ncname, ")");
+  var startTagOpen = new RegExp("^<".concat(qnameCapture));
+
+  function parseHTML(html) {
+    while (html) {
+      var textEnd = html.indexOf('<');
+
+      if (textEnd === 0) {
+        var startTagMatch = parseStartTag();
+      }
+
+      break;
+    }
+
+    function parseStartTag() {
+      var start = html.match(startTagOpen);
+
+      if (start) {
+        console.log(start);
+      }
+    }
+  }
+
   function compileToFn(template) {
-    console.log(template);
+    var root = parseHTML(template);
+    return function render() {};
   }
 
   function initMixin(Vue) {
@@ -185,7 +202,6 @@
         template = el.outerHTML;
       }
 
-      console.log(template);
       var render = compileToFn(template);
     };
   }

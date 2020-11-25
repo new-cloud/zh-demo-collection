@@ -18,7 +18,6 @@ function initMixin(Vue){
         if(!template){
             template = el.outerHTML;
         }
-        console.log(template);
         let render = compileToFn(template);
         
     }
