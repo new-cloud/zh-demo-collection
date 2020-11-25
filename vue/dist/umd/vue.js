@@ -44,6 +44,10 @@
 
   function isObject(data) {
     return _typeof(data) === 'object' && data !== null;
+  } //判断传入的el 是否是一个元素节点
+
+  function isElementNode(node) {
+    return node.nodeType === 1;
   }
 
   // 重写 数组的方法
@@ -148,10 +152,41 @@
     new Hijack(data);
   }
 
+  // Regular Expressions for parsing tags and attributes
+  // const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
+  // const dynamicArgAttribute = /^\s*((?:v-[\w-]+:|@|:|#)\[[^=]+?\][^\s"'<>\/=]*)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
+  // const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
+  // const qnameCapture = `((?:${ncname}\\:)?${ncname})`
+  // const startTagOpen = new RegExp(`^<${qnameCapture}`)
+  // const startTagClose = /^\s*(\/?)>/
+  // const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
+  // const doctype = /^<!DOCTYPE [^>]+>/i
+  function compileToFn(template) {
+    console.log(template);
+  }
+
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
       this.$options = options;
       initState(this);
+
+      if (options.el) {
+        var el = isElementNode(options.el) ? options.el : document.querySelector(options.el);
+        this.$mount(el);
+      }
+    };
+
+    Vue.prototype.$mount = function (el) {
+      var vm = this;
+      var options = vm.$options;
+      var template = options.template;
+
+      if (!template) {
+        template = el.outerHTML;
+      }
+
+      console.log(template);
+      var render = compileToFn(template);
     };
   }
 
