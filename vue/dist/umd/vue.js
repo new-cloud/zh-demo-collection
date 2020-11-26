@@ -168,11 +168,20 @@
       break;
     }
 
+    function advance(n) {
+      html = html.substring(n);
+      console.log(html);
+    }
+
     function parseStartTag() {
       var start = html.match(startTagOpen);
 
       if (start) {
-        console.log(start);
+        var match = {
+          tagName: start[1],
+          attrs: []
+        };
+        advance(start[0].length);
       }
     }
   }

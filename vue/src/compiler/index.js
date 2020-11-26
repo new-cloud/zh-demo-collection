@@ -17,12 +17,17 @@ function parseHTML(html) {
         break;
     }
     function advance(n) {
-        
+        html = html.substring(n);
+        console.log(html);
     }
     function parseStartTag(){
         let start = html.match(startTagOpen);
         if(start){
-            console.log(start);
+            const match = {
+                tagName: start[1],
+                attrs: []
+            };
+            advance(start[0].length);
         }
     }
 }
