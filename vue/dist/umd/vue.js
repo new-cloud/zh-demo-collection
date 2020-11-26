@@ -44,6 +44,10 @@
 
   function isObject(data) {
     return _typeof(data) === 'object' && data !== null;
+  } //判断传入的el 是否是一个元素节点
+
+  function isElementNode(node) {
+    return node.nodeType === 1;
   }
 
   // 重写 数组的方法
@@ -148,10 +152,57 @@
     new Hijack(data);
   }
 
+  // Regular Expressions for parsing tags and attributes
+  var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z]*";
+  var qnameCapture = "((?:".concat(ncname, "\\:)?").concat(ncname, ")");
+  var startTagOpen = new RegExp("^<".concat(qnameCapture));
+
+  function parseHTML(html) {
+    while (html) {
+      var textEnd = html.indexOf('<');
+
+      if (textEnd === 0) {
+        var startTagMatch = parseStartTag();
+      }
+
+      break;
+    }
+
+    function parseStartTag() {
+      var start = html.match(startTagOpen);
+
+      if (start) {
+        console.log(start);
+      }
+    }
+  }
+
+  function compileToFn(template) {
+    var root = parseHTML(template);
+    return function render() {};
+  }
+
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
       this.$options = options;
       initState(this);
+
+      if (options.el) {
+        var el = isElementNode(options.el) ? options.el : document.querySelector(options.el);
+        this.$mount(el);
+      }
+    };
+
+    Vue.prototype.$mount = function (el) {
+      var vm = this;
+      var options = vm.$options;
+      var template = options.template;
+
+      if (!template) {
+        template = el.outerHTML;
+      }
+
+      var render = compileToFn(template);
     };
   }
 

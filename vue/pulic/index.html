@@ -8,8 +8,16 @@
 </head>
 <body>
     <div id="app"> 
-        
+        <p>{{age}}</p>
     </div>
+    <!-- <input type="text" v-model="form.input" />
+        <div>{{form.input}}</div>
+        <ul>
+            <li>{{age}}</li>
+            <li>{{sex}}</li>
+        </ul>
+        <div>{{getNewName}}</div>
+        <button v-on:click="change">add</button> -->
 </body>
 <script src="/dist/umd/vue.js"></script>
 <script>
@@ -40,9 +48,9 @@
             }
         }
     });
-    vm.$data.arr.push({
-        name: 'mm'
-    });
+    // vm.$data.arr.push({
+    //     name: 'mm'
+    // });
     console.log(vm.$data.arr);
 </script>
 </html>
