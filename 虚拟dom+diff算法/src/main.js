@@ -8,7 +8,7 @@ let vnode = h(
     h('p', { style: { background: 'blue' }, key: 'C'},'C'),
     h('p', { style: { background: 'fuchsia' }, key: 'D'},'D1')
 );
-// console.log(vnode);
+console.log(vnode);
 
 //将虚拟节点转化为真实DOM 插入app元素
 let app = document.getElementById('app');

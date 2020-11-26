@@ -153,9 +153,21 @@
   }
 
   // Regular Expressions for parsing tags and attributes
+  var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
   var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z]*";
   var qnameCapture = "((?:".concat(ncname, "\\:)?").concat(ncname, ")");
   var startTagOpen = new RegExp("^<".concat(qnameCapture));
+  var startTagClose = /^\s*(\/?)>/;
+  var endTag = new RegExp("^<\\/".concat(qnameCapture, "[^>]*>"));
+
+  function start(tagName, attrs) {
+    console.log('开始标签:', tagName);
+    console.log('属性:', attrs);
+  }
+
+  function end(tagName) {
+    console.log('结束标签:', tagName);
+  }
 
   function parseHTML(html) {
     while (html) {
@@ -163,25 +175,63 @@
 
       if (textEnd === 0) {
         var startTagMatch = parseStartTag();
+
+        if (startTagMatch) {
+          start(startTagMatch.tagName, startTagMatch.attrs);
+          continue;
+        }
+
+        var endTagMatch = html.match(endTag);
+
+        if (endTagMatch) {
+          advance(endTagMatch[0].length);
+          end(endTagMatch[1]);
+          continue;
+        }
       }
 
-      break;
+      var text = void 0;
+
+      if (textEnd >= 0) {
+        text = html.substring(0, textEnd);
+      }
+
+      if (text) {
+        advance(text.length);
+      }
     }
 
     function advance(n) {
       html = html.substring(n);
-      console.log(html);
     }
 
     function parseStartTag() {
       var start = html.match(startTagOpen);
+      var match;
 
       if (start) {
-        var match = {
+        match = {
           tagName: start[1],
           attrs: []
         };
         advance(start[0].length);
+      }
+
+      var end, attr;
+
+      while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+        advance(attr[0].length);
+        match.attrs.push({
+          name: attr[1],
+          value: attr[3] || attr[4] || attr[5]
+        });
+      } // console.log(html)
+      // console.log(match)
+
+
+      if (end) {
+        advance(end[0].length);
+        return match;
       }
     }
   }
