@@ -16,7 +16,7 @@ body {
 .div1{
   @include woshiname(100px);
 }
-//继承
+// 继承
 .c1{
   border: 1px solid #ffff00;
   border-radius: 50%;
