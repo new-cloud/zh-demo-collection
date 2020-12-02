@@ -1,6 +1,7 @@
 import { initState } from './state';
 import { isElementNode } from './utils/index';
 import { compileToFn } from './compiler/index';
+import compile from './compiler/compile';
 
 function initMixin(Vue){
     Vue.prototype._init = function(options){
@@ -8,7 +9,8 @@ function initMixin(Vue){
         initState(this);
         if(options.el){
             let el = isElementNode(options.el)?options.el:document.querySelector(options.el);
-            this.$mount(el);
+            // this.$mount(el);
+            new compile(el,this);
         }
     }
     Vue.prototype.$mount = function(el) {

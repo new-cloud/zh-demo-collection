@@ -8,22 +8,66 @@ const startTagClose = /^\s*(\/?)>/
 const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
 const doctype = /^<!DOCTYPE [^>]+>/i
 
+function start(tagName, attrs){
+    console.log('开始标签:',tagName)
+    console.log('属性:',attrs)
+}
+function end(tagName) {
+    console.log('结束标签:', tagName);
+} 
 function parseHTML(html) {
     while(html){
         let textEnd = html.indexOf('<');
-        if(textEnd ===0 ) {
+        if(textEnd === 0 ) {
             let startTagMatch = parseStartTag();
+            if(startTagMatch){
+                start(startTagMatch.tagName,startTagMatch.attrs);
+                continue;
+            }
+            let endTagMatch = html.match(endTag);
+            if(endTagMatch){
+                advance(endTagMatch[0].length);
+                end(endTagMatch[1]);
+                continue;
+            }
+
         }
-        break;
+        let text;
+        if(textEnd >= 0){
+            text = html.substring(0,textEnd);
+        }
+        if(text){
+            advance(text.length);
+        }
     }
     function advance(n) {
-        
+        html = html.substring(n);
     }
     function parseStartTag(){
         let start = html.match(startTagOpen);
+        let match;
         if(start){
-            console.log(start);
+            match = {
+                tagName: start[1],
+                attrs: []
+            };
+            advance(start[0].length);
         }
+        let end,attr;
+        while(!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+            advance(attr[0].length);
+            match.attrs.push({
+                name: attr[1],
+                value: attr[3] || attr[4] || attr[5]
+            })
+        }
+        // console.log(html)
+        // console.log(match)
+        if(end){
+            advance(end[0].length);
+            return match;
+        }
+       
     }
 }
 
