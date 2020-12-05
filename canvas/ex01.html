@@ -32,24 +32,6 @@
     ctx.moveTo(200,100);        //定义线条开始坐标
     ctx.lineTo(210,110);    //定义线条结束坐标
     ctx.stroke();
-    // 绘制文本
-    // let text = '....';
-    // ctx.fillStyle = '#FF0000';
-    // ctx.fillText(text, 150, 150);
-    let starArr = [];
-    for (let i = 0; i < 10; i++) {
-        let x = Math.round(500 * Math.random());// 横坐标
-        let y = Math.round(500 * Math.random());// 纵坐标
-        starArr.push({x,y});
-        ctx.fillStyle = '#2789FF';
-        ctx.fillRect(x,y,1,1);
-    }
-    function add(){
-        for (var n = 0; n < 10; n++) {
-            let {x, y} = starArr[n];
-            // ctx.clearRect(x,y,1,1);
-            ctx.fillRect(x,y,1,1);
-  		}
-    }
+    
 </script>
 </html>
