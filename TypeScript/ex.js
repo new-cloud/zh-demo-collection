@@ -1,3 +1,5 @@
+"use strict";
+exports.__esModule = true;
 var ttt = 'kahu';
 // console.log(ttt)
 //数组
@@ -34,13 +36,38 @@ function checkSex(sex) {
     return result;
 }
 var member_sex = Sex.FEMALE;
+// console.log(checkSex(member_sex)) // 女
+function add(a, b) {
+    console.log(a);
+    return '11';
+}
+// console.log(add('aa'));
+//类的定义
+var obj = /** @class */ (function () {
+    function obj(name) {
+        this.name = 'xx';
+    }
+    return obj;
+}());
+function f(o) {
+    console.log(o.label);
+}
+var myObj = { size: 10, label: "Size 10 Object" };
+f(myObj);
+function render(res) {
+    res.data.forEach(function (val) {
+        console.log(val);
+    });
+}
 var res = {
+    data: [
+        { id: 1, age: 'A' },
+        { id: 2, name: 'B' },
+    ]
+};
+var res1 = {
     data: [
         { id: 1, name: 'A' },
         { id: 2, name: 'B' },
     ]
 };
-var asdsd;
-asdsd = 1;
-console.log(asdsd);
-// export {}

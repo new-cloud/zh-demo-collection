@@ -51,8 +51,24 @@ class obj{
         this.name = 'xx';
     }
 }
-console.log(new obj('aa'));
+// console.log(new obj('aa'));
+
 //接口
+
+interface LabelledValue {
+    label: string,
+    color?: number,  //color 属性可有可没有
+    readonly x: number, // x 只读属性 只能在对象刚刚创建的时候修改其值
+    sayHi: ()=>string 
+  }
+  
+  function f(o: LabelledValue) {
+    console.log(o.label);
+  }
+  
+  let myObj = {size: 10, label: "Size 10 Object", x: 20, sayHi: ():string =>{return "Hi there"}};
+  //x 一经创建 值就无法修改
+  f(myObj);
 interface list {
     id: number,
     name: string
