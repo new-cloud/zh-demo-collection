@@ -5,7 +5,6 @@ class Beobserver{
     }
     subscribe(observer) {
         this.arr.push(observer);
-        console.log(this.arr)
     }
     release(){
         this.arr.forEach(observer=>observer.update());
@@ -33,6 +32,7 @@ class Observer{
 }
 class Hijack{ //数据劫持
     constructor(data){
+        console.log(data)
         this.observer(data);
     }
     observer(data){
@@ -74,7 +74,6 @@ class Compiler{
 
         //编译模板
         this.compile(fragment);
-
         this.el.appendChild(fragment);
     }
     isElementNode(node){

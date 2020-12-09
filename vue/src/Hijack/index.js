@@ -1,9 +1,12 @@
 
 import { isObject } from '../utils/index';
 import arrMethods from './arrMethods';
+import { Beobserver } from '../compiler/PublishSubscribe';
+
 
 export class Hijack{ //数据劫持
     constructor(data){
+        console.log(data)
         if(!isObject(data)) throw new TypeError("data 的值必须是一个对象!");
         this.walk(data);
     }
@@ -30,11 +33,11 @@ export class Hijack{ //数据劫持
         let _this = this;
         //递归对 对象 实现深度观察
         this.walk(value);
-        // let dep = new Beobserver();
+        let dep = new Beobserver();
         //观察对象属性
         Object.defineProperty(data,key,{
             get(){
-                // Beobserver.target && dep.subscribe(Beobserver.target);
+                Beobserver.target && dep.subscribe(Beobserver.target);
                 return value;
             },
             set:(newVal)=>{
@@ -42,7 +45,7 @@ export class Hijack{ //数据劫持
                     //防止修改的值 是一个新对象
                     this.walk(newVal);
                     value = newVal;
-                    // dep.release();
+                    dep.release();
                 }
             }
         })

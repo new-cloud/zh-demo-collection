@@ -143,11 +143,138 @@
     };
   });
 
+  var CompileUtils = {
+    getExpr: function getExpr(vm, expr) {
+      return expr.split('.').reduce(function (data, key) {
+        return data[key];
+      }, vm.$data);
+    },
+    setVal: function setVal(vm, expr, value) {
+      expr.split('.').reduce(function (data, key, index, arr) {
+        if (index === arr.length - 1) {
+          data[key] = value;
+        }
+
+        return data[key];
+      }, vm.$data);
+    },
+    model: function model(node, expr, vm) {
+      var _this = this;
+
+      var fn = this.updater.modelUpdater;
+      new Observer(vm, expr, function (newVal) {
+        fn(node, newVal);
+      });
+      node.addEventListener('input', function (e) {
+        var value = e.target.value;
+
+        _this.setVal(vm, expr, value);
+      });
+      var value = this.getExpr(vm, expr);
+      fn(node, value);
+    },
+    on: function on(node, expr, vm, eventName) {
+      node.addEventListener(eventName, function (e) {
+        vm[expr].call(vm, e);
+      });
+    },
+    html: function html() {},
+    //...
+    getContentVal: function getContentVal(vm, expr) {
+      var _this2 = this;
+
+      return expr.replace(/\{\{(.+?)\}\}/g, function () {
+        return _this2.getExpr(vm, arguments.length <= 1 ? undefined : arguments[1]);
+      });
+    },
+    text: function text(node, content, vm) {
+      var _this3 = this;
+
+      var fn = this.updater.textUpdater;
+      var value = content.replace(/\{\{(.+?)\}\}/g, function () {
+        new Observer(vm, arguments.length <= 1 ? undefined : arguments[1], function () {
+          var vlaue2 = _this3.getContentVal(vm, content);
+
+          fn(node, vlaue2);
+        });
+        return _this3.getExpr(vm, arguments.length <= 1 ? undefined : arguments[1]);
+      });
+      fn(node, value);
+    },
+    updater: {
+      modelUpdater: function modelUpdater(node, value) {
+        node.value = value;
+      },
+      htmlUpdater: function htmlUpdater() {},
+      textUpdater: function textUpdater(node, value) {
+        node.textContent = value;
+      } //...
+
+    }
+  };
+
+  var Beobserver = /*#__PURE__*/function () {
+    function Beobserver() {
+      _classCallCheck(this, Beobserver);
+
+      this.arr = [];
+    }
+
+    _createClass(Beobserver, [{
+      key: "subscribe",
+      value: function subscribe(observer) {
+        this.arr.push(observer);
+      }
+    }, {
+      key: "release",
+      value: function release() {
+        this.arr.forEach(function (observer) {
+          return observer.update();
+        });
+      }
+    }]);
+
+    return Beobserver;
+  }();
+
+  var Observer = /*#__PURE__*/function () {
+    function Observer(vm, expr, cd) {
+      _classCallCheck(this, Observer);
+
+      this.vm = vm;
+      this.expr = expr;
+      this.cd = cd;
+      this.oldValue = this.get();
+    }
+
+    _createClass(Observer, [{
+      key: "get",
+      value: function get() {
+        Beobserver.target = this;
+        var value = CompileUtils.getExpr(this.vm, this.expr);
+        Beobserver.target = null;
+        return value;
+      }
+    }, {
+      key: "update",
+      value: function update() {
+        var newVal = CompileUtils.getExpr(this.vm, this.expr);
+
+        if (newVal != this.oldValue) {
+          this.cd(newVal);
+        }
+      }
+    }]);
+
+    return Observer;
+  }();
+
   var Hijack = /*#__PURE__*/function () {
     //数据劫持
     function Hijack(data) {
       _classCallCheck(this, Hijack);
 
+      console.log(data);
       if (!isObject(data)) throw new TypeError("data 的值必须是一个对象!");
       this.walk(data);
     }
@@ -181,12 +308,12 @@
         var _this3 = this;
 
 
-        this.walk(value); // let dep = new Beobserver();
-        //观察对象属性
+        this.walk(value);
+        var dep = new Beobserver(); //观察对象属性
 
         Object.defineProperty(data, key, {
           get: function get() {
-            // Beobserver.target && dep.subscribe(Beobserver.target);
+            Beobserver.target && dep.subscribe(Beobserver.target);
             return value;
           },
           set: function set(newVal) {
@@ -194,7 +321,8 @@
               //防止修改的值 是一个新对象
               _this3.walk(newVal);
 
-              value = newVal; // dep.release();
+              value = newVal;
+              dep.release();
             }
           }
         });
@@ -204,6 +332,27 @@
     return Hijack;
   }();
 
+  function proxyVm(vm) {
+    var _loop = function _loop(key) {
+      Object.defineProperty(vm, key, {
+        get: function get() {
+          //这里只是将最外层的值修改了返回值
+          //为什么 取对象多层嵌套里面的值还是返回正确
+          //因为JS取值是从外面开始取,
+          //比如 vm.form.input 是先去vm.form 在取vn.form返回值的 .input
+          //所以这里将最外面的form返回值修改后  就不用再修改form里每个值的返回值了
+          return vm.$data[key];
+        },
+        set: function set(newVal) {
+          vm.$data[key] = newVal;
+        }
+      });
+    };
+
+    for (var key in vm.$data) {
+      _loop(key);
+    }
+  }
   function initState(vm) {
     var opts = vm.$options; // 区分vue的数据来源 
 
@@ -213,15 +362,55 @@
       initData(vm);
     }
 
-    if (opts.methods) ;
+    if (opts.methods) {
+      initMethods(vm);
+    }
 
-    if (opts.computed) ;
+    if (opts.computed) {
+      initComputed(vm);
+    }
   }
 
   function initData(vm) {
     var data = vm.$options.data;
     data = vm.$data = typeof data === 'function' ? data.call(vm) : data;
-    new Hijack(data);
+    new Hijack(data); //把数据获取操作 vm上的取值操作 都代理到 vm.$data
+
+    proxyVm(vm);
+  }
+
+  function initMethods(vm) {
+    //实例方法
+    var methods = vm.$options.methods;
+
+    var _loop2 = function _loop2(key) {
+      Object.defineProperty(vm, key, {
+        get: function get() {
+          return methods[key];
+        }
+      });
+    };
+
+    for (var key in methods) {
+      _loop2(key);
+    }
+  }
+
+  function initComputed(vm) {
+    //计算属性
+    var computed = vm.$options.computed;
+
+    var _loop3 = function _loop3(key) {
+      Object.defineProperty(vm.$data, key, {
+        get: function get() {
+          return computed[key].call(vm);
+        }
+      });
+    };
+
+    for (var key in computed) {
+      _loop3(key);
+    }
   }
 
   // Regular Expressions for parsing tags and attributes
@@ -313,106 +502,6 @@
     return function render() {};
   }
 
-  var Observer = /*#__PURE__*/function () {
-    function Observer(vm, expr, cd) {
-      _classCallCheck(this, Observer);
-
-      this.vm = vm;
-      this.expr = expr;
-      this.cd = cd;
-      this.oldValue = this.get();
-    }
-
-    _createClass(Observer, [{
-      key: "get",
-      value: function get() {
-        var value = CompileUtils.getExpr(this.vm, this.expr);
-        return value;
-      }
-    }, {
-      key: "update",
-      value: function update() {
-        var newVal = CompileUtils.getExpr(this.vm, this.expr);
-
-        if (newVal != this.oldValue) {
-          this.cd(newVal);
-        }
-      }
-    }]);
-
-    return Observer;
-  }();
-
-  var CompileUtils = {
-    getExpr: function getExpr(vm, expr) {
-      return expr.split('.').reduce(function (data, key) {
-        return data[key];
-      }, vm.$data);
-    },
-    setVal: function setVal(vm, expr, value) {
-      expr.split('.').reduce(function (data, key, index, arr) {
-        if (index === arr.length - 1) {
-          data[key] = value;
-        }
-
-        return data[key];
-      }, vm.$data);
-    },
-    model: function model(node, expr, vm) {
-      var _this = this;
-
-      var fn = this.updater.modelUpdater;
-      new Observer(vm, expr, function (newVal) {
-        fn(node, newVal);
-      });
-      node.addEventListener('input', function (e) {
-        var value = e.target.value;
-
-        _this.setVal(vm, expr, value);
-      });
-      var value = this.getExpr(vm, expr);
-      fn(node, value);
-    },
-    on: function on(node, expr, vm, eventName) {
-      node.addEventListener(eventName, function (e) {
-        vm[expr].call(vm, e);
-      });
-    },
-    html: function html() {},
-    //...
-    getContentVal: function getContentVal(vm, expr) {
-      var _this2 = this;
-
-      return expr.replace(/\{\{(.+?)\}\}/g, function () {
-        return _this2.getExpr(vm, arguments.length <= 1 ? undefined : arguments[1]);
-      });
-    },
-    text: function text(node, content, vm) {
-      var _this3 = this;
-
-      var fn = this.updater.textUpdater;
-      var value = content.replace(/\{\{(.+?)\}\}/g, function () {
-        new Observer(vm, arguments.length <= 1 ? undefined : arguments[1], function () {
-          var vlaue2 = _this3.getContentVal(vm, content);
-
-          fn(node, vlaue2);
-        });
-        return _this3.getExpr(vm, arguments.length <= 1 ? undefined : arguments[1]);
-      });
-      fn(node, value);
-    },
-    updater: {
-      modelUpdater: function modelUpdater(node, value) {
-        node.value = value;
-      },
-      htmlUpdater: function htmlUpdater() {},
-      textUpdater: function textUpdater(node, value) {
-        node.textContent = value;
-      } //...
-
-    }
-  };
-
   var Compiler = /*#__PURE__*/function () {
     function Compiler(el, vm) {
       _classCallCheck(this, Compiler);
@@ -420,7 +509,8 @@
       this.vm = vm;
       var fragment = this.nodeFragment(el); //编译模板
 
-      this.compile(fragment); // this.el.appendChild(fragment);
+      this.compile(fragment);
+      el.appendChild(fragment);
     }
 
     _createClass(Compiler, [{

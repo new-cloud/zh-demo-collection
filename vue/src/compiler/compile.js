@@ -7,7 +7,7 @@ export default class Compiler{
         let fragment = this.nodeFragment(el);
         //编译模板
         this.compile(fragment);
-        // this.el.appendChild(fragment);
+        el.appendChild(fragment);
     }
     isElementNode(node){
         //判断传入的el 是否是一个元素节点

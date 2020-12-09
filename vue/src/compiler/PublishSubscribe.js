@@ -7,7 +7,6 @@ class Beobserver{
     }
     subscribe(observer) {
         this.arr.push(observer);
-        console.log(this.arr)
     }
     release(){
         this.arr.forEach(observer=>observer.update());
