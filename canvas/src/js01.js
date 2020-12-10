@@ -23,6 +23,7 @@ gradient.addColorStop("0","magenta");
 gradient.addColorStop("0.5","blue");
 gradient.addColorStop("1.0","red");
 ctx.strokeStyle = gradient;
+// ctx.fillStyle = gradient; //填充矩形
 // ctx.moveTo(70,380);
 // ctx.lineTo(50,400);
 // ctx.lineTo(50,700);
