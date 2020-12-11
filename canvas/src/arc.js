@@ -50,19 +50,17 @@ ctx.fill();
 
 function remoteControl() {
     ctx.translate(50, 200);
-    ctx.fillStyle = "#f0f0f0";
-    ctx.fillRect(-80,-80,160,160);
     let s = 60,
         e = 120;
     ctx.beginPath();
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 60;
     ctx.shadowBlur = 8;
-    ctx.shadowColor = "rgba(0, 0, 0, .2)";
+    ctx.shadowColor = "rgba(0, 0, 0, .4)";
     ctx.arc(0, 0, 50, Math.PI*2/360* 60, Math.PI*2/360* 300);
     ctx.stroke();
     
-    for(var i=1; i<2; i++){
+    for(var i=1; i<4; i++){
         // ctx.beginPath();
         // ctx.fillStyle = '#fff';
         // ctx.shadowBlur = 5;
@@ -72,12 +70,16 @@ function remoteControl() {
         // ctx.closePath();
         // ctx.fill();
         ctx.beginPath();
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 60;
-        ctx.arc(0, 0, 50, Math.PI*2/360* 120, Math.PI*2/360* 121);
+        ctx.strokeStyle = '#E6E6E6';
+        ctx.shadowBlur = 0;
+        ctx.lineWidth = 1;
+        ctx.moveTo(-20,0);
+        ctx.lineTo(-80,0);
         ctx.stroke();
+        s += 60;
         e += 60;
     }
+    
 
 }
 remoteControl();

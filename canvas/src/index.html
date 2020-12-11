@@ -7,18 +7,27 @@
     <title>Document</title>
     <style>
         .d1{
+            position: relative;
             display: flex;
             justify-content: center;
         }
         canvas{
+            /* position: absolute;
+            top: 0; */
             border: 1px solid #040E19;
             /* background: #040E19; */
         }
+        /* .d2{
+            width: 1000px;
+            height: 1000px;
+            background: red;
+        } */
     </style>
 </head>
 <body>
     <div class="d1">
         <canvas id="myCanvas" width="1000" height="1000"></canvas>
+        <div class="d2"></div>
     </div>
 </body>
 <script>
