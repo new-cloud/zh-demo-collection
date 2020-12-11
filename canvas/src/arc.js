@@ -37,3 +37,47 @@ function add(n) {
     ctx.stroke();
 }
 // add(10);
+
+// 扇形
+ctx.beginPath();
+// 重新定义 下一次 绘制的坐标基线
+ctx.translate(100, 200);
+ctx.moveTo(0, 0);
+ctx.arc(0, 0, 50, Math.PI*2/360* 60, Math.PI*2/360* 120);
+// 闭合路径
+ctx.closePath();
+ctx.fill();
+
+function remoteControl() {
+    ctx.translate(50, 200);
+    ctx.fillStyle = "#f0f0f0";
+    ctx.fillRect(-80,-80,160,160);
+    let s = 60,
+        e = 120;
+    ctx.beginPath();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 60;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = "rgba(0, 0, 0, .2)";
+    ctx.arc(0, 0, 50, Math.PI*2/360* 60, Math.PI*2/360* 300);
+    ctx.stroke();
+    
+    for(var i=1; i<2; i++){
+        // ctx.beginPath();
+        // ctx.fillStyle = '#fff';
+        // ctx.shadowBlur = 5;
+        // ctx.shadowColor = "red";
+        // ctx.moveTo(0, 0);
+        // ctx.arc(0, 0, 50, Math.PI*2/360* s, Math.PI*2/360* e);
+        // ctx.closePath();
+        // ctx.fill();
+        ctx.beginPath();
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 60;
+        ctx.arc(0, 0, 50, Math.PI*2/360* 120, Math.PI*2/360* 121);
+        ctx.stroke();
+        e += 60;
+    }
+
+}
+remoteControl();
