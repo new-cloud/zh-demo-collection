@@ -1,2 +1,2 @@
-import './js01';
+// import './path';
 import './arc';

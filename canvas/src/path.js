@@ -1,6 +1,5 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-
 // 绘制矩形
 // fillRect(x, y, w, h)
 ctx.fillStyle = "#2789FF"; //填充矩形
