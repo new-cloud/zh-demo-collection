@@ -35,7 +35,6 @@ ctx.strokeStyle = gradient;
 // ctx.lineTo(70,380);
 // ctx.stroke();
 
-
    
 // 绘制文本
 ctx.font="30px Arial";

@@ -60,7 +60,7 @@ function remoteControl() {
     ctx.arc(0, 0, 50, Math.PI*2/360* 60, Math.PI*2/360* 300);
     ctx.stroke();
     
-    for(var i=1; i<4; i++){
+    for(var i=1; i<2; i++){
         // ctx.beginPath();
         // ctx.fillStyle = '#fff';
         // ctx.shadowBlur = 5;
@@ -75,11 +75,11 @@ function remoteControl() {
         ctx.lineWidth = 1;
         ctx.moveTo(-20,0);
         ctx.lineTo(-80,0);
+        ctx.closePath();
         ctx.stroke();
         s += 60;
         e += 60;
     }
-    
 
 }
 remoteControl();
