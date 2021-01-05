@@ -1,6 +1,6 @@
 //观察者模式
 
-    //被观察者  例: 公司    
+    //被观察者(目标)  例: 公司    
     class Subject {
         constructor(){
             this.state = '进行中';
