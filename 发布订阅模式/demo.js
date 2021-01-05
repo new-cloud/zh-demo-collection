@@ -2,10 +2,10 @@
     
     let event = {
         _arr: [],
-        on(fn){  //发布
+        on(fn){  //订阅
             this._arr.push(fn);
         },
-        emit(){  //订阅
+        emit(){  //发布
             this._arr.forEach(fn=>{
                 fn();
             })
