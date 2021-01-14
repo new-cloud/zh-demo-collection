@@ -194,6 +194,8 @@
             calc(100% - 55px) 100%, 20px 100%, 
             0 calc(100% - 20px) 
 		);
+		/* 边框显示不出缺口 */
+		/* border: 1px solid red; */
       }
 	  .d11{
 		position: absolute;
@@ -223,8 +225,8 @@
   <body>
     <main>
 		<div class="box">
-			<div class="d11"></div>
-			<div class='d1'>
+			<!-- <div class="d11"></div> -->
+			<div class='d1' id="d11">
 				<div class="d2"></div>
 			</div>
 		</div>
@@ -237,4 +239,9 @@
       </div> -->
     </main>
   </body>
+  <script>
+    document.getElementById('d11').onclick = function() {
+      console.log(1)
+    }
+  </script>
 </html>
