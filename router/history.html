@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">add</button>
+</body>
+<script>
+    document.getElementById("btn").onclick = () => {
+        // 向路由记录里面添加一条记录  并跳转到 page1这个路由 前端根据路由渲染视图
+        //  服务端并不根据路由返回html 而是不管那个路由都只返回 index.html这个根文件
+        history.pushState({name: 'page1'}, '', 'page1')
+    }
+    // 监听浏览器的前进后退  并根据路由 渲染视图
+    window.onpopstate = (e) => {
+        console.log(e.state)
+        console.log(location.pathname)
+    }
+   
+</script>
+</html>
